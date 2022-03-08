@@ -76,7 +76,7 @@ if(interactive()) {
       " days"
     )
   )
-  cli::cli_alert_warning()
+
   # customise the prompt
   prompt::set_prompt(function(...){
     branch <- (purrr::safely(gert::git_branch))()
@@ -91,6 +91,9 @@ if(interactive()) {
                                         keep up the ${adjective} work!"))
   cli::cli_text("")
   
+  # usethis options: speed up package install with Ncpus (parallel installation)
+  options(Ncpus = 6)
+  
 }
 ```
 
@@ -103,6 +106,7 @@ To help you, below are some details on what is happening in the script:
 - The first section clears the console screen so you have a blank slate to work with.
 - The second section adds the prompt to tell you how long you've been learning R for: it uses a combination of paste0 and lubridate. To change this to when you started learning R, change the date from 1 may 16 to whenever your first R experience was. You can add other achievements (or failures using `cli::cli_alert_warning()`) here too, like when you graduated or learned to drive.
 - The third section tells you what git branch you are in. This is very helpful if you are using git with R. If you are not using git you will just get the default console setting.
-- The final section uses paste and praise to add welcome messages. If you want to find out more about the praise package, check out it's [github repo](https://github.com/rladies/praise).
+- The next section uses paste and praise to add welcome messages. If you want to find out more about the praise package, check out it's [github repo](https://github.com/rladies/praise).
+- The final section adds options. I've added `Ncpus = 6`, this effects the `install.packages` function, and using `Ncpus = 6` means it will use 6 cores rather than the default 2 cores; this means it will install packages much faster! 
 
 That's it! Enjoy editing and making a welcoming rprofile.
