@@ -62,20 +62,28 @@ The below code chunk contains the code to make your rprofile a bit more exciting
 ```{r eval=FALSE}
 if(interactive()) {
   
-  cat("\014") # clear screen
+  # set up welcome
+  name <- 'Andrew'
+  hour <- format(Sys.time(), format = '%H') |> as.numeric() |> as.character()
+  
+  morning <- 0:11
+  afternoon <- 12:16
+  evening <- c(17:23)
+  
+  day_hrs <- rep(
+    x = c('Morning', 'Afternoon', 'Evening'), 
+    times = c(length(morning), length(afternoon), length(evening))
+  )
+  
+  names(day_hrs) <- as.character(0:23)
+  
+  # clear screen
+  cat("\014") 
   cli::cli_text("")
-  cli::cli_text(R.version$version.string)
+  # call r version
+  cli::cli_text(R.version$version.string) 
   cli::cli_text("")
   
-  # been using and learning r for x days
-  cli::cli_alert_success(
-    paste0(
-      "Using and learning R for ",
-      lubridate::today() - lubridate::dmy("1 may 16"),
-      " days"
-    )
-  )
-
   # customise the prompt
   prompt::set_prompt(function(...){
     branch <- (purrr::safely(gert::git_branch))()
@@ -83,18 +91,66 @@ if(interactive()) {
     return(paste0("[", branch$result, "] > "))
   })
   
-  # hey, welcome to r
-  cli::cli_alert_success(paste("Hey! Welcome to R and RStudio!",
-                               intToUtf8(127758), intToUtf8(127752),
-                               intToUtf8(129429), intToUtf8(129430)))
-  cli::cli_alert_success(praise::praise("${exclamation}! 
-                                        You are doing a ${adjective} job, 
-                                        keep up the ${adjective} work!"))
-  cli::cli_text("")
+  # usethis options
+  options(usethis.protocol = "ssh")
+  options(usethis.full_name = "Andrew Peter Moles")
   
-  # usethis options: speed up package install with Ncpus (parallel installation)
+  # bias against scientific notation
+  options(scipen = 4)
+  
+  # speed up package install with Ncpus (parallel installation)
   options(Ncpus = 6)
   
+  # increase install packages timeout 
+  options(timeout=300)
+  
+  # R compile speed up - https://twitter.com/grant_mcdermott/status/1493400952878952448
+  options(collapse_mask = "manip")
+  
+  # hey, welcome to r
+  cli::cli_text(
+    cli::col_yellow(paste0(
+      'Good ', day_hrs[hour], ', ', name, '!'
+    ))
+  )
+  cli::cli_text(
+    cli::col_br_magenta(paste0(
+      paste0("Welcome to R and RStudio! ", 
+             intToUtf8(127758), intToUtf8(129429), intToUtf8(129430), 
+             intToUtf8(127794), intToUtf8(128029))
+    ))
+  )
+  cli::cli_text("")
+  # been using and learning r for x days
+  cli::cli_alert_success(
+    paste0(
+      "Using and learning R for ",
+      lubridate::today() - lubridate::dmy("1 may 16"),
+      " days ", intToUtf8(129504), intToUtf8(128187)
+    )
+  )
+  # give yourself some praise
+  cli::cli_alert_success(praise::praise("${exclamation}! You are doing a ${adjective} job, keep up the ${adjective} work!"))
+  cli::cli_alert_success(praise::praise("${exclamation}! I've been ${adverb} ${creating} R materials since 2018, how ${adjective}"))
+  cli::cli_text("")
+  
+  cli::cli_rule(center = '#rstats')
+  
+  # emoji references:
+  # list of emoji
+  # https://unicode.org/emoji/charts/full-emoji-list.html
+  # add code to search to find html entity
+  # https://www.compart.com/en/unicode 
+  
+  # Hadley quote to finish
+  cli::cli_blockquote(
+    quote = paste0(
+      'R is not a language driven by the purity of its philosophy; ', 
+      'R is a language designed to get shit done.'
+    ), 
+    
+    citation = '@hadleywickham, rstudioconf2022.'
+  )
 }
 ```
 
